@@ -15,6 +15,9 @@ limitations under the License.
 =end
 
 module Secretariat
+  INVOICE_TYPE_CODES = {
+    :INVOICE => "380",
+  }
 
   TAX_CATEGORY_CODES = {
    :STANDARDRATE => "S",

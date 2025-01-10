@@ -19,6 +19,7 @@ require 'bigdecimal'
 module Secretariat
   Invoice = Struct.new("Invoice",
     :id,
+    :invoice_type,
     :issue_date,
     :service_period_start,
     :service_period_end,
@@ -63,6 +64,10 @@ module Secretariat
 
     def payment_code
       PAYMENT_CODES[payment_type] || '1'
+    end
+
+    def invoice_type_code
+      INVOICE_TYPE_CODES[invoice_type] || INVOICE_TYPE_CODES[:INVOICE]
     end
 
     def valid?
@@ -141,13 +146,13 @@ module Secretariat
             if version == 1
               xml['ram'].Name "RECHNUNG"
             end
-            xml['ram'].TypeCode '380' # TODO: make configurable
+            xml['ram'].TypeCode invoice_type_code
             xml['ram'].IssueDateTime do
               xml['udt'].DateTimeString(format: '102') do
                 xml.text(issue_date.strftime("%Y%m%d"))
               end
             end
-            
+
           end
           transaction = by_version(version, 'SpecifiedSupplyChainTradeTransaction', 'SupplyChainTradeTransaction')
           xml['rsm'].send(transaction) do
