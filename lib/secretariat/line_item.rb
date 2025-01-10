@@ -67,8 +67,9 @@ module Secretariat
       end
 
       calculated_tax = charge_price * BigDecimal(tax_percent) / BigDecimal(100)
-      if calculated_tax != tax
-        @errors << "Tax and calculated tax deviate: #{tax} / #{calculated_tax}"
+      #  column based calculation && row based calculation
+      if calculated_tax.round(2) != tax.round(2)
+        @errors << "Tax and calculated tax deviate: #{tax} / #{calculated_tax} (Compared after rounding to 2 digits)"
         return false
       end
       return true
